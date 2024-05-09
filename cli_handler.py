@@ -2,7 +2,7 @@ import argparse
 import sys
 from task import Task
 from rms import RateMonotonicScheduler
-from edfs import EarliestDeadlineFirstScheduler
+from edf import EarliestDeadlineFirstScheduler
 from file_manager import read_tasks_from_file, write_statistics_to_file
 from cpu import CPU
 

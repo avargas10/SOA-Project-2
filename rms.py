@@ -1,4 +1,4 @@
-from scheduler import Scheduler, Statistic
+from scheduler import Scheduler, ExecutableItems
 
 
 class RateMonotonicScheduler(Scheduler):
@@ -6,31 +6,14 @@ class RateMonotonicScheduler(Scheduler):
         utilization = sum(task.execution_time / task.period for task in self.tasks)
         return utilization
     
-    def is_schedulable(self):
-        n = len(self.tasks)
-        if n == 0:
-            return True  # Sin tareas, siempre es planificable
-        
-        # Límite de Liu y Layland
-        utilization_limit = n * (2**(1/n) - 1)
-        
-        total_utilization = self.calculate_utilization()
-        
-        return total_utilization <= utilization_limit
-
-        # for task in self.tasks:
-        #     print(f"Updated task {task.pid} with running {task.runningTime}")
 
     def run(self):
-        if not self.is_schedulable():
-            self.logger.error("Advertencia: El conjunto de tareas puede no ser planificable con Rate Monotonic Scheduling.")
-        
         self.tasks.sort(key=lambda task: task.period)  # RMS: Ordena por periodo (menor a mayor)
         self.assign_priorities()
 
         for self.current_time in range(self.simulation_time):
             for task in self.tasks:
-                self.periodTriggered(task)
+                self.periodTriggered(task, ExecutableItems.period)
             if len(self.execution_queue) == 0:
                 self.cpu.empty_run(self.current_time)
             for task_pid in self.execution_queue:

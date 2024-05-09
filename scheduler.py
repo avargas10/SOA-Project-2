@@ -5,6 +5,12 @@ from logger import Logger
 from enum import Enum
 from constants import SCHEDULER_LOGGER, GENERAL_STATISTICS
 
+class ExecutableItems(Enum):
+    pid = "pid"
+    period = "period"
+    deadline = "deadline"
+
+
 class Statistic(Enum):
     missed_deadlines = "missed_deadlines"
     executed_periods = "executed_periods"
@@ -31,6 +37,7 @@ class Scheduler:
             Statistic.executed_periods.value: 0,
             Statistic.non_executed_periods.value: self.simulation_time
         }
+        
 
     def add_task(self, task):
         self.tasks.append(task)
@@ -76,19 +83,19 @@ class Scheduler:
     
     def getTask(self, task_pid):
         for task in self.tasks:
-            if task.pid == task_pid["pid"]:
+            if task.pid == task_pid[ExecutableItems.pid.value]:
                 return task
 
     def remove_from_execution_queue(self, task_pid):
         for executable in self.execution_queue:
-            if executable["pid"] == task_pid:
+            if executable[ExecutableItems.pid.value] == task_pid:
                 task = self.getTask(executable)
                 task.resetTask()
                 self.updateTask(task)
                 self.execution_queue.remove(executable)
 
     def removeExecutable(self, task_pid, aborted=False):
-        id_list = [item["pid"] for item in self.execution_queue]
+        id_list = [item[ExecutableItems.pid.value] for item in self.execution_queue]
         if task_pid in id_list:
             self.remove_from_execution_queue(task_pid)
 
@@ -103,16 +110,18 @@ class Scheduler:
             self.update_statistics(task, Statistic.missed_deadlines)
         return deadline_met
     
-    def periodTriggered(self, task):
+    def periodTriggered(self, task, key):
         if self.current_time % task.period == 0:
-            id_list = [item["pid"] for item in self.execution_queue]
+            id_list = [item[ExecutableItems.pid.value] for item in self.execution_queue]
             if task.pid in id_list:
                 self.removeExecutable(task.pid, aborted=True)
                 self.logger.warning(f"Reschedule of task {task.pid} met at {self.current_time}")
                 self.update_statistics(task, Statistic.missed_deadlines)
-            self.execution_queue.append({"pid":task.pid, "period":task.period})
+            self.execution_queue.append({ExecutableItems.pid.value: task.pid, 
+                                         ExecutableItems.period.value: task.period, 
+                                         ExecutableItems.deadline.value: task.deadline + self.current_time})
             self.logger.info(f"Task period met adding to execution queue {task.pid} at {self.current_time}")
-            self.execution_queue.sort(key=lambda task: task["period"])
+            self.execution_queue.sort(key=lambda task: task[key.value])
 
         
     def send_task_to_cpu(self, task_pid):
