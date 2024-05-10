@@ -122,6 +122,7 @@ class gui():
 
         Button(self.root, text="Add Task", command=self.add_task).pack(pady=10)
         Button(self.root, text="Run Scheduler", command=self.run_scheduler).pack(pady=10)
+        Button(self.root, text="View Statistics", command=self.view_statistics).pack(pady=10)
         Button(self.root, text="Load and Plot Timeline", command=self.load_and_plot_timeline).pack(pady=10)
         Button(self.root, text="Clear All Tasks", command=self.clear_all_tasks).pack(pady=20)
         
