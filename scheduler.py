@@ -1,5 +1,6 @@
 import heapq
 import time
+from tabulate import tabulate
 from cpu import CPU
 from logger import Logger
 from enum import Enum
@@ -15,12 +16,12 @@ class ExecutableItems(Enum):
 
 
 class Statistic(Enum):
-    missed_deadlines = "missed_deadlines"
-    executed_periods = "executed_periods"
-    non_executed_periods = "non_executed_periods"
-    missed_deadlines_percentage = "missed_deadlines_percentage"
-    executed_periods_percentage = "executed_periods_percentage"
-    non_executed_periods_percentage = "non_executed_periods_percentage"
+    missed_deadlines = "Missed Deadlines"
+    executed_periods = "Executed Periods"
+    non_executed_periods = "Non executed Periods"
+    missed_deadlines_percentage = "Missed Deadlines Percentage"
+    executed_periods_percentage = "Executed Periods Percentage"
+    non_executed_periods_percentage = "Non executed Periods Percentage"
 
 class Scheduler:
     def __init__(self, simulation_time, name, cpu, aperiodic=False, randomGenerator=False):
@@ -95,7 +96,44 @@ class Scheduler:
         
 
     def save_statistics(self):
-        self.statisticsLogger.info(self.statistics)
+        # Extract general statistics and remaining tasks
+        general_stats = self.statistics.pop('GENERAL_STATISTICS')  # Save and remove 'GENERAL_STATISTICS'
+        tasks = self.statistics.items()  # Get the rest of the tasks
+
+        # Determine column widths based on the longest content in each column
+        headers = ["Task"] + list(general_stats.keys())
+        column_widths = [
+            max(len(str(val)), len(header))
+            for header, val in zip(headers, [str(task) for task, _ in tasks] + list(general_stats.values()))
+        ]
+
+        # Create horizontal border
+        horizontal_border = "+-" + "-+-".join("-" * width for width in column_widths) + "-+"
+
+        # Print the table header
+        self.logger.info(horizontal_border)
+        header_row = "| " + " | ".join(
+            header.ljust(width) for header, width in zip(headers, column_widths)
+        ) + " |"
+        self.statisticsLogger.info(header_row)
+        self.statisticsLogger.info(horizontal_border)
+
+        # Print the data for tasks
+        for task, stats in tasks:
+            row = [task] + list(stats.values())
+            row_str = "| " + " | ".join(
+                str(val).ljust(width) for val, width in zip(row, column_widths)
+            ) + " |"
+            self.statisticsLogger.info(row_str)
+
+        # Print general statistics at the end
+        general_row = ["GENERAL_STATISTICS"] + list(general_stats.values())
+        general_row_str = "| " + " | ".join(
+            str(val).ljust(width) for val, width in zip(general_row, column_widths)
+        ) + " |"
+        self.statisticsLogger.info(horizontal_border)
+        self.statisticsLogger.info(general_row_str)
+        self.statisticsLogger.info(horizontal_border)
 
     def run(self):
         # Método que simulará el scheduling
@@ -135,7 +173,6 @@ class Scheduler:
                 
 
     def removeExecutable(self, task_pid):
-        self.logger.error(f"**** task_pid {task_pid}")
         id_list = [item[ExecutableItems.pid.value] for item in self.execution_queue]
         if task_pid in id_list:
             self.remove_from_execution_queue(task_pid, isLogicDelete=True)
