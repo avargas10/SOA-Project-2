@@ -1,0 +1,52 @@
+2024-05-09 19:24:50,043 - INFO - Task period met adding to execution queue Task1 at 0
+2024-05-09 19:24:50,043 - INFO - Task period met adding to execution queue Task2 at 0
+2024-05-09 19:24:50,043 - INFO - Task period met adding to execution queue Task3 at 0
+2024-05-09 19:24:50,043 - INFO - CPU empty executing Task1 
+2024-05-09 19:24:50,043 - INFO - Task Task1 finished at 3
+2024-05-09 19:24:50,043 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,043 - INFO - Task period met adding to execution queue Task1 at 10
+2024-05-09 19:24:50,043 - WARNING - Swtiching tasks executing Task1 
+2024-05-09 19:24:50,044 - INFO - Task Task1 finished at 13
+2024-05-09 19:24:50,044 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,044 - WARNING - Reschedule of task Task2 met at 15
+2024-05-09 19:24:50,044 - INFO - Task period met adding to execution queue Task2 at 15
+2024-05-09 19:24:50,044 - INFO - Task period met adding to execution queue Task1 at 20
+2024-05-09 19:24:50,044 - WARNING - Reschedule of task Task3 met at 20
+2024-05-09 19:24:50,044 - INFO - Task period met adding to execution queue Task3 at 20
+2024-05-09 19:24:50,044 - WARNING - Swtiching tasks executing Task1 
+2024-05-09 19:24:50,044 - INFO - Task Task1 finished at 23
+2024-05-09 19:24:50,044 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,044 - INFO - Task Task2 finished at 28
+2024-05-09 19:24:50,044 - INFO - CPU empty executing Task3 
+2024-05-09 19:24:50,044 - INFO - Task period met adding to execution queue Task1 at 30
+2024-05-09 19:24:50,044 - INFO - Task period met adding to execution queue Task2 at 30
+2024-05-09 19:24:50,044 - WARNING - Swtiching tasks executing Task1 
+2024-05-09 19:24:50,044 - INFO - Task Task1 finished at 33
+2024-05-09 19:24:50,045 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,045 - INFO - Task period met adding to execution queue Task1 at 40
+2024-05-09 19:24:50,045 - WARNING - Reschedule of task Task3 met at 40
+2024-05-09 19:24:50,045 - INFO - Task period met adding to execution queue Task3 at 40
+2024-05-09 19:24:50,045 - WARNING - Swtiching tasks executing Task1 
+2024-05-09 19:24:50,045 - INFO - Task Task1 finished at 43
+2024-05-09 19:24:50,045 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,045 - WARNING - Reschedule of task Task2 met at 45
+2024-05-09 19:24:50,045 - INFO - Task period met adding to execution queue Task2 at 45
+2024-05-09 19:24:50,045 - INFO - Task period met adding to execution queue Task1 at 50
+2024-05-09 19:24:50,045 - WARNING - Swtiching tasks executing Task1 
+2024-05-09 19:24:50,045 - INFO - Task Task1 finished at 53
+2024-05-09 19:24:50,045 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,045 - INFO - Task Task2 finished at 58
+2024-05-09 19:24:50,046 - INFO - CPU empty executing Task3 
+2024-05-09 19:24:50,046 - INFO - Task period met adding to execution queue Task1 at 60
+2024-05-09 19:24:50,046 - INFO - Task period met adding to execution queue Task2 at 60
+2024-05-09 19:24:50,046 - WARNING - Reschedule of task Task3 met at 60
+2024-05-09 19:24:50,046 - INFO - Task period met adding to execution queue Task3 at 60
+2024-05-09 19:24:50,046 - WARNING - Swtiching tasks executing Task1 
+2024-05-09 19:24:50,046 - INFO - Task Task1 finished at 63
+2024-05-09 19:24:50,046 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,046 - INFO - Task period met adding to execution queue Task1 at 70
+2024-05-09 19:24:50,046 - WARNING - Swtiching tasks executing Task1 
+2024-05-09 19:24:50,046 - INFO - Task Task1 finished at 73
+2024-05-09 19:24:50,046 - INFO - CPU empty executing Task2 
+2024-05-09 19:24:50,046 - WARNING - Reschedule of task Task2 met at 75
+2024-05-09 19:24:50,046 - INFO - Task period met adding to execution queue Task2 at 75

@@ -1,4 +1,2 @@
-2024-05-09 16:57:52,150 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 29, 'Current Time': 14}
-2024-05-09 16:57:52,150 - INFO - {'Task': 'Task3', 'Finished': True, 'Running Time': 2, 'Pending Time': 0, 'Current Deadline': 29, 'Current Time': 15}
-2024-05-09 16:57:52,151 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 59, 'Current Time': 44}
-2024-05-09 16:57:52,151 - INFO - {'Task': 'Task3', 'Finished': True, 'Running Time': 2, 'Pending Time': 0, 'Current Deadline': 59, 'Current Time': 45}
+2024-05-09 19:24:50,044 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 44, 'Current Time': 29}
+2024-05-09 19:24:50,046 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 74, 'Current Time': 59}
