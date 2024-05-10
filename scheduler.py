@@ -22,7 +22,7 @@ class Statistic(Enum):
     non_executed_periods_percentage = "non_executed_periods_percentage"
 
 class Scheduler:
-    def __init__(self, simulation_time, name, cpu, aperiodic=False):
+    def __init__(self, simulation_time, name, cpu, aperiodic=False, randomGenerator=False):
         self.simulation_time = simulation_time
         self.tasks = []
         self.name = name
@@ -30,6 +30,7 @@ class Scheduler:
         self.cpu = cpu
         self.statistics = {}
         self.preemp = True
+        self.randomGenerator = randomGenerator
         self.aperiodic = aperiodic
         self.execution_queue = []
         self.logPath = SCHEDULER_LOGGER + "-" + name
@@ -67,7 +68,10 @@ class Scheduler:
             Statistic.non_executed_periods.value: self.simulation_time
         }
         if task.aperiodic:
-            task.updatedStartedTime(self.initialize_random_int())
+            if self.randomGenerator:
+                task.updatedStartedTime(self.initialize_random_int())
+            else:
+                task.updatedStartedTime(task.period)
         self.tasks.append(task)
 
     def update_statistics(self, task, statistic):

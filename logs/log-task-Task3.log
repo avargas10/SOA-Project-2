@@ -1,24 +1,11 @@
-<<<<<<< HEAD
-2024-05-09 19:08:37,558 - INFO - Task Created
-2024-05-09 19:08:37,558 - INFO - Task Task3 created
-2024-05-09 19:08:37,558 - INFO - 
-Period 20
-Execution Time 2
-Deadline 19
-Aperiodic False
-Started Time 0 
-2024-05-09 19:08:37,559 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 48, 'Current Time': 29}
-2024-05-09 19:08:37,559 - INFO - {'Task': 'Task3', 'Finished': True, 'Running Time': 2, 'Pending Time': 0, 'Current Deadline': 48, 'Current Time': 34}
-=======
-2024-05-09 19:15:11,889 - INFO - Task Created
-2024-05-09 19:15:11,889 - INFO - Task Task3 created
-2024-05-09 19:15:11,889 - INFO - 
+2024-05-09 23:14:59,620 - INFO - Task Created
+2024-05-09 23:14:59,620 - INFO - Task Task3 created
+2024-05-09 23:14:59,620 - INFO - 
 Period 20
 Execution Time 2
 Deadline 19
 Aperiodic True
 Started Time 0 
-2024-05-09 19:15:11,889 - INFO - New StartedTime 27
-2024-05-09 19:15:11,889 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 46, 'Current Time': 27}
-2024-05-09 19:15:11,889 - INFO - {'Task': 'Task3', 'Finished': True, 'Running Time': 2, 'Pending Time': 0, 'Current Deadline': 46, 'Current Time': 28}
->>>>>>> feature/edfa
+2024-05-09 23:14:59,620 - INFO - New StartedTime 20
+2024-05-09 23:14:59,620 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 44, 'Current Time': 25}
+2024-05-09 23:14:59,620 - INFO - {'Task': 'Task3', 'Finished': True, 'Running Time': 2, 'Pending Time': 0, 'Current Deadline': 44, 'Current Time': 26}
