@@ -3,6 +3,8 @@ from tkinter import Label, Entry, Button, Listbox, Scrollbar, END, messagebox, f
 import plotly.express as px
 import tkinterweb
 import json
+import shlex
+import argparse
 from scheduler import Scheduler
 from cpu import CPU
 import subprocess
@@ -14,39 +16,42 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from constants import LOGS_PATH
+from file_manager import read_tasks_from_file, write_statistics_to_file
 
 class gui():
     def __init__(self, root):
         self.root = root
-        self.root.title("Task Scheduler GUI")
+        self.root.title("Task Scheduler Simulation Interface")
         self.cpu = CPU("Processor")
         self.random_case = tk.IntVar()
         self.scheduler = None
         self.task_ids = set()
         self.setup_initial_choice()
         
-        
-        self.setup_initial_choice()
 
     def setup_initial_choice(self):
         self.clear_widgets()  # Ensure the window is cleared whenever setting up the initial choice
-        Button(self.root, text="Run Manually", command=self.setup_manual_operation).pack(pady=20)
-        Button(self.root, text="Provide CLI Command", command=self.provide_cli_command).pack(pady=20)
-        Button(self.root, text="Help", command=self.display_help).pack(pady=20)
+        Button(self.root, text="Manual Run", command=self.setup_manual_operation).pack(pady=20)
+        Button(self.root, text="CLI Command", command=self.provide_cli_command).pack(pady=20)
+        Button(self.root, text="Help", command=lambda: self.display_help(context="main")).pack(pady=20)
 
     def clear_widgets(self):
         for widget in self.root.winfo_children():
             widget.destroy()
+         # Immediately reinitialize CPU with default settings
+        self.cpu = CPU("Processor")
+        self.scheduler = None  # Or initialize a default scheduler if applicable
 
     def provide_cli_command(self):
         self.clear_widgets()
         Label(self.root, text="Enter CLI Command:").pack()
-        self.cli_command_entry = Entry(self.root, width=50)
+        self.cli_command_entry = Entry(self.root, width=80)
         self.cli_command_entry.pack(pady=10)
         Button(self.root, text="Execute Command", command=self.execute_cli_command).pack(pady=10)
-        Button(self.root, text="View Timeline", command=self.load_and_plot_timeline).pack(pady=10)
         Button(self.root, text="View Statistics", command=self.view_statistics).pack(pady=10)
-        Button(self.root, text="Clear All Tasks", command=self.setup_initial_choice).pack(pady=10)
+        Button(self.root, text="View Timeline", command=self.load_and_plot_timeline).pack(pady=10)
+        Button(self.root, text="Clear Simulation", command=self.setup_initial_choice).pack(pady=10)
+        Button(self.root, text="Help", command=lambda: self.display_help(context="cli_command")).pack(pady=20)
 
     def view_statistics(self):
         # Read log content
@@ -70,9 +75,43 @@ class gui():
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Command failed: {e.stderr}")
 
-    def clear_widgets(self):
-        for widget in self.root.winfo_children():
-            widget.destroy()
+    def execute_cli_command(self):
+            command_line = self.cli_command_entry.get()
+            args = self.parse_command(command_line)
+            aperiodic = False
+            if args:
+                ##self.initialize_scheduler(args)
+                random_case = int(self.random_case.get()) > 0
+                if args.algorithm == 'RMS':
+                    self.scheduler = RateMonotonicScheduler(args.time, args.algorithm, self.cpu)
+                elif args.algorithm in ['EDF']:
+                    self.scheduler = EarliestDeadlineFirstScheduler(args.time, args.algorithm, self.cpu)
+                elif args.algorithm == ['EDFA']:
+                    self.scheduler = EarliestDeadlineFirstScheduler(args.time, args.algorithm, self.cpu, aperiodic=True, randomGenerator=random_case)      
+                tasks = read_tasks_from_file(args.input, aperiodic=aperiodic)
+                for task in tasks:
+                   self.scheduler.add_task(task)
+                self.scheduler.run()
+                statistics = self.scheduler.get_statistics()
+                write_statistics_to_file(args.output, statistics)
+                messagebox.showinfo("Success", "Scheduler ran successfully and results saved.")
+            else:
+                messagebox.showerror("Error", "Failed to parse the command or initialize the scheduler.")
+
+    def parse_command(self, command_line):
+        parser = argparse.ArgumentParser(description='Simulador de Scheduling de Tiempo Real')
+        parser.add_argument('-i', '--input', type=str, required=True, help='Archivo de entrada con tareas')
+        parser.add_argument('-o', '--output', type=str, required=True, help='Archivo de salida para estadísticas')
+        parser.add_argument('-a', '--algorithm', type=str, required=True, choices=['RMS', 'EDF', 'EDFA'], help='Algoritmo de scheduling')
+        parser.add_argument('-t', '--time', type=int, required=True, help='Tiempo de simulación')
+
+        try:
+            args = parser.parse_args(shlex.split(command_line))
+            return args
+        except SystemExit:
+            # Handle the parsing errors and exit gracefully without crashing the GUI
+            return None
+
 
     def setup_manual_operation(self):
         self.clear_widgets()
@@ -85,8 +124,6 @@ class gui():
         self.simulation_time_entry.pack()
 
         tk.Checkbutton(self.root, text="Real Random Interruptions Case", variable=self.random_case).pack()
-
-
         Button(self.root, text="Submit", command=self.submit_manual_setup).pack(pady=20)
 
         
@@ -126,10 +163,11 @@ class gui():
         self.task_execution_time_entry.pack()
 
         Button(self.root, text="Add Task", command=self.add_task).pack(pady=10)
-        Button(self.root, text="Run Scheduler", command=self.run_scheduler).pack(pady=10)
+        Button(self.root, text="Run Simulation", command=self.run_scheduler).pack(pady=10)
         Button(self.root, text="View Statistics", command=self.view_statistics).pack(pady=10)
-        Button(self.root, text="Load and Plot Timeline", command=self.load_and_plot_timeline).pack(pady=10)
-        Button(self.root, text="Clear All Tasks", command=self.clear_all_tasks).pack(pady=20)
+        Button(self.root, text="View Timeline", command=self.load_and_plot_timeline).pack(pady=10)
+        Button(self.root, text="Clear Simulation", command=self.clear_all_tasks).pack(pady=20)
+        Button(self.root, text="Help", command=lambda: self.display_help(context="manual_run")).pack(pady=20)
         
         self.task_list = Listbox(self.root, height=10, width=50)
         self.task_list.pack(pady=20)
@@ -155,7 +193,6 @@ class gui():
                 period = int(self.task_period_entry.get())
                 deadline = int(self.task_deadline_entry.get())
                 execution_time = int(self.task_execution_time_entry.get())
-
                 task = Task(pid=task_id, period=period, deadline=deadline, execution_time=execution_time)
                 self.scheduler.add_task(task)
                 self.task_ids.add(task_id)  # Add the TaskID to the set of existing IDs
@@ -170,18 +207,55 @@ class gui():
             except Exception as e:
                 messagebox.showerror("Error", f"An unexpected error occurred: {str(e)}")
 
-    def display_help(self):
-        # Muestra información de ayuda
-        help_text = ("Información de Ayuda:\n\n"
-                     "Para agregar una tarea:\n"
-                     "- Ingrese el ID de la tarea, periodo, plazo y tiempo de ejecución.\n"
-                     "- Haga clic en 'Agregar Tarea' para programarla.\n\n"
-                     "Para ejecutar el programador:\n"
-                     "- Asegúrese de que todas las tareas estén agregadas.\n"
-                     "- Haga clic en 'Ejecutar Programador' para comenzar la simulación.\n\n"
-                     "Comando CLI:\n"
-                     "- Proporcione un comando de línea de comandos como lo haría en una terminal para ejecutar tareas de programación.\n"
-                     "  Ejemplo: cli_handler.py -i input.txt -o output.txt -a RMS -t 100")
+    def display_help(self, context):
+        if context == 'main':
+            help_text = ("Información de Ayuda:\n\n"
+                        "Menu Principal, cuenta con 2 opciones a ecoger:\n"
+                        "- Manual Run: Esta opción le permite crear la simulación de forma manual, definir el tipo de scheduler, tiempo de ejecución," 
+                            "asi como agregar las tarea 1 a 1, tambien nos permite ejecutar el Scheduler y ver estadisticas y linea del tiempo.\n"
+                        "- CLI Command: Esta opcion le permite ejecutar un comando de CLI, para cargar la simulación desde archivos de entradas y guardar salidas en archivos.\n"
+                        "    Referirse al help de la siguiente pantalla de esta opción para mas detalles \n")
+
+        elif context == 'cli_command':
+             help_text =  ("Ayuda para Comando CLI:\n\n"
+                "Proporcione un comando que ejecutará una simulación completa basada en los parámetros especificados. "
+                "El comando debe contener los parámetros necesarios para ejecutar la simulación.\n\n"
+                "Ejemplo de comando:\n"
+                "-i examples/task1.txt -o results/test1_result_rms.txt -a RMS -t 80\n\n"
+                "Descripción de los parámetros del comando:\n"
+                "-i: Archivo de entrada que contiene las tareas. Cada tarea debe estar en el formato 'ID_Tarea, Periodo, Tiempo_de_ejecución, Plazo'.\n"
+                "    Ejemplo de tareas en el archivo:\n"
+                "    Task1,10,4,8\n"
+                "    Task2,15,5,7\n"
+                "    Task3,20,8,10\n"
+                "-o: Ruta del archivo donde se deben almacenar los resultados de la simulación.\n"
+                "-a: Algoritmo de planificación a utilizar. Las opciones disponibles son: RMS, EDF, EDFA.\n"
+                "-t: Tiempo de ejecución de la simulación en segundos, indica cuánto tiempo debe correr la simulación.\n\n"
+                "Descripción de los botones disponibles:\n"
+                "Run Command: Ejecuta el comando proporcionado y realiza la simulación según los parámetros dados.\n"
+                "View Time Line: Muestra una línea de tiempo con la ejecución de las tareas en el CPU. Este toma por defecto el valor del parámetro -t, "
+                "sin embargo, puede ser modificado en el cuadro de texto correspondiente.\n"
+                "View Statistics: Muestra las estadísticas de ejecución por proceso, incluyendo números y porcentajes de ejecuciones, "
+                "missed deadlines, etc. Este es un archivo formateado en JSON.\n"
+                "Clear Simulation: Reinicia la ejecución para comenzar de nuevo, eliminando cualquier tarea y resultado previamente cargados.\n")
+        elif context == 'manual_run':
+             help_text =  ("Ayuda para Manual Run:\n\n"
+                "Esta interfaz le permite Agregar y Calenderizar Tasks de forma manual e interactiva\n\n"
+                "Para Agregar un Task debe primero proporcionar:\n"
+                "TaskId: Id Unico de la tarea. No puede ser repetido o econtrará un error.\n"
+                "Period: Periodo de la Tarea.\n"
+                "Deadline: Deadline.\n"
+                "Execution Time: Tiempo de ejecución de la tarea.\n"
+
+                "Una vez lleno este campo, debe presionar el botton Add Task, lo que agregará la tarea a la simulacion, esto se puede repetir muchas veces.\n\n"
+                "Run Simulation: Corre el Scheduler, con el Algoritmo seleccionado en la pantalla anterio, y por el tiempo definido.\n"
+                "View Time Line: Muestra una línea de tiempo con la ejecución de las tareas en el CPU. Este toma por defecto el valor del parámetro -t, "
+                "sin embargo, puede ser modificado en el cuadro de texto correspondiente.\n"
+                "View Statistics: Muestra las estadísticas de ejecución por proceso, incluyendo números y porcentajes de ejecuciones, "
+                "missed deadlines, etc. Este es un archivo formateado en JSON.\n"
+                "Clear Simulation: Reinicia la ejecución para comenzar de nuevo, eliminando cualquier tarea y resultado previamente cargados.\n")
+        else:
+            help_text = "No help available for this section."
         messagebox.showinfo("Ayuda", help_text)
 
     def run_scheduler(self):
