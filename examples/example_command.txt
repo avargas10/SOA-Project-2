@@ -1,0 +1,1 @@
+-i examples/task1.txt -o results/test1_results_rms.txt -a EDFA -t 50 -r True

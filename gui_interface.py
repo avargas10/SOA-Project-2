@@ -66,26 +66,17 @@ class gui():
             messagebox.showerror("Error", f"Failed to read log file: {str(e)}")    
 
     def execute_cli_command(self):
-        command = self.cli_command_entry.get()
-        try:
-            output = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
-            messagebox.showinfo("CLI Command Output", "Command executed successfully, check output files for details")
-        except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Command failed: {e.stderr}")
-
-    def execute_cli_command(self):
             command_line = self.cli_command_entry.get()
             args = self.parse_command(command_line)
             aperiodic = False
             if args:
-                ##self.initialize_scheduler(args)
-                random_case = int(self.random_case.get()) > 0
                 if args.algorithm == 'RMS':
                     self.scheduler = RateMonotonicScheduler(args.time, args.algorithm, self.cpu)
-                elif args.algorithm in ['EDF']:
+                elif args.algorithm == 'EDF':
                     self.scheduler = EarliestDeadlineFirstScheduler(args.time, args.algorithm, self.cpu)
-                elif args.algorithm == ['EDFA']:
-                    self.scheduler = EarliestDeadlineFirstScheduler(args.time, args.algorithm, self.cpu, aperiodic=True, randomGenerator=random_case)      
+                elif args.algorithm == 'EDFA':
+                    self.scheduler = EarliestDeadlineFirstScheduler(args.time, args.algorithm, self.cpu, aperiodic=True, randomGenerator=args.random)  
+                    print(self.scheduler.name)    
                 tasks = read_tasks_from_file(args.input, aperiodic=aperiodic)
                 for task in tasks:
                    self.scheduler.add_task(task)
@@ -102,9 +93,11 @@ class gui():
         parser.add_argument('-o', '--output', type=str, required=True, help='Archivo de salida para estadísticas')
         parser.add_argument('-a', '--algorithm', type=str, required=True, choices=['RMS', 'EDF', 'EDFA'], help='Algoritmo de scheduling')
         parser.add_argument('-t', '--time', type=int, required=True, help='Tiempo de simulación')
+        parser.add_argument('-r', '--random', type=bool, required=False, help='Random Init Times')
 
         try:
             args = parser.parse_args(shlex.split(command_line))
+            print(args)
             return args
         except SystemExit:
             # Handle the parsing errors and exit gracefully without crashing the GUI

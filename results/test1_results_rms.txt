@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-GENERAL_STATISTICS: {'missed_deadlines': 0, 'executed_periods': 16, 'non_executed_periods': 34, 'executed_periods_percentage': 32.0, 'non_executed_periods_percentage': 68.0}
-Task1: {'missed_deadlines': 0, 'executed_periods': 4, 'non_executed_periods': 46, 'executed_periods_percentage': 8.0, 'non_executed_periods_percentage': 92.0}
-Task2: {'missed_deadlines': 0, 'executed_periods': 10, 'non_executed_periods': 40, 'executed_periods_percentage': 20.0, 'non_executed_periods_percentage': 80.0}
-Task3: {'missed_deadlines': 0, 'executed_periods': 2, 'non_executed_periods': 48, 'executed_periods_percentage': 4.0, 'non_executed_periods_percentage': 96.0}
-=======
-GENERAL_STATISTICS: {'missed_deadlines': 0, 'executed_periods': 17, 'non_executed_periods': 33, 'executed_periods_percentage': 34.0, 'non_executed_periods_percentage': 66.0}
-Task1: {'missed_deadlines': 0, 'executed_periods': 4, 'non_executed_periods': 46, 'executed_periods_percentage': 8.0, 'non_executed_periods_percentage': 92.0}
-Task2: {'missed_deadlines': 0, 'executed_periods': 5, 'non_executed_periods': 45, 'executed_periods_percentage': 10.0, 'non_executed_periods_percentage': 90.0}
+GENERAL_STATISTICS: {'missed_deadlines': 0, 'executed_periods': 19, 'non_executed_periods': 31, 'executed_periods_percentage': 38.0, 'non_executed_periods_percentage': 62.0}
+Task1: {'missed_deadlines': 0, 'executed_periods': 7, 'non_executed_periods': 43, 'executed_periods_percentage': 14.0, 'non_executed_periods_percentage': 86.0}
+Task2: {'missed_deadlines': 0, 'executed_periods': 4, 'non_executed_periods': 46, 'executed_periods_percentage': 8.0, 'non_executed_periods_percentage': 92.0}
 Task3: {'missed_deadlines': 0, 'executed_periods': 8, 'non_executed_periods': 42, 'executed_periods_percentage': 16.0, 'non_executed_periods_percentage': 84.0}
->>>>>>> acaabdc (fix scheduler issues)

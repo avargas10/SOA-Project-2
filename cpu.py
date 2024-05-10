@@ -26,8 +26,9 @@ class CPU:
         history_entry =  {"Task": self.current_task , "Start": current_time, "Finish": current_time + 1}
         self.execution_history.append(history_entry)
 
-    def killProcess(self):
-        self.current_task = None
+    def killProcess(self, task_pid):
+        if self.current_task and self.current_task.pid == task_pid:
+            self.current_task = None
 
     def return_cpu_history(self):
         return self.execution_history

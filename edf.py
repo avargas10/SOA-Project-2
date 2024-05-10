@@ -14,7 +14,8 @@ class EarliestDeadlineFirstScheduler(Scheduler):
                 self.execution_queue.append({ExecutableItems.pid.value: task.pid, 
                                          ExecutableItems.period.value: task.period, 
                                          ExecutableItems.deadline.value: task.deadline + task.startedTime, 
-                                         ExecutableItems.startTime.value: task.startedTime})
+                                         ExecutableItems.startTime.value: task.startedTime,
+                                         ExecutableItems.delete.value: False})
                 self.execution_queue.sort(key=lambda executable: executable[ExecutableItems.deadline.value])
     
     def isExecuting(self, task):
@@ -30,6 +31,7 @@ class EarliestDeadlineFirstScheduler(Scheduler):
         self.tasks.sort(key=lambda task: task.deadline + task.startedTime)  # RMS: Ordena por periodo (menor a mayor)
         self.assign_priorities()
         for self.current_time in range(self.simulation_time):
+            self.garbageCollector()
             for task in self.tasks:
                 self.validateNewTasks(task)
             executed = False
@@ -48,10 +50,12 @@ class EarliestDeadlineFirstScheduler(Scheduler):
         self.save_statistics()
 
     def runPeriodic(self):
+        
         self.tasks.sort(key=lambda task: task.deadline)  # RMS: Ordena por periodo (menor a mayor)
         self.assign_priorities()
 
         for self.current_time in range(self.simulation_time):
+            self.garbageCollector()
             for task in self.tasks:
                 self.periodTriggered(task, ExecutableItems.deadline)
             executed = False

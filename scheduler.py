@@ -11,6 +11,7 @@ class ExecutableItems(Enum):
     period = "period"
     deadline = "deadline"
     startTime = "startTime"
+    delete = "delete"
 
 
 class Statistic(Enum):
@@ -113,26 +114,39 @@ class Scheduler:
             if task.pid == task_pid[ExecutableItems.pid.value]:
                 return task
 
-    def remove_from_execution_queue(self, task_pid):
+    def garbageCollector(self):
+        new_execution_queue = self.execution_queue.copy()
         for executable in self.execution_queue:
-            if executable[ExecutableItems.pid.value] == task_pid:
+            if executable[ExecutableItems.delete.value] == True:
+                self.logger.info(f"Removing {executable[ExecutableItems.pid.value]} from execution queue")
                 task = self.getTask(executable)
                 task.resetTask()
                 self.updateTask(task)
-                self.execution_queue.remove(executable)
+                new_execution_queue.remove(executable)
+        self.execution_queue = new_execution_queue.copy()
 
-    def removeExecutable(self, task_pid, aborted=False):
+    def remove_from_execution_queue(self, task_pid, isLogicDelete=False):
+        for index, executable in enumerate(self.execution_queue):
+            if executable[ExecutableItems.pid.value] == task_pid:
+                if isLogicDelete:
+                    self.logger.info(f"Disable {executable[ExecutableItems.pid.value]} from execution queue")
+                    executable[ExecutableItems.delete.value] = True
+                    self.execution_queue[index] = executable
+                
+
+    def removeExecutable(self, task_pid):
+        self.logger.error(f"**** task_pid {task_pid}")
         id_list = [item[ExecutableItems.pid.value] for item in self.execution_queue]
         if task_pid in id_list:
-            self.remove_from_execution_queue(task_pid)
+            self.remove_from_execution_queue(task_pid, isLogicDelete=True)
 
     def is_deadline_met(self, task_pid):
         task = self.getTask(task_pid)
         deadline_met = False
-        if self.current_time - task.startedTime >= task.deadline and task.started:
+        if self.current_time - task.startedTime >= task_pid[ExecutableItems.deadline.value]:
             deadline_met = True
-            self.removeExecutable(task_pid[ExecutableItems.pid.value], aborted=True)
-            self.cpu.killProcess()
+            self.removeExecutable(task_pid[ExecutableItems.pid.value])
+            self.cpu.killProcess(task_pid[ExecutableItems.pid.value])
             self.logger.warning(f"Deadline of task {task_pid[ExecutableItems.pid.value]} met at {self.current_time}")
             self.update_statistics(task, Statistic.missed_deadlines)
         return deadline_met
@@ -141,13 +155,14 @@ class Scheduler:
         if self.current_time % task.period == 0:
             id_list = [item[ExecutableItems.pid.value] for item in self.execution_queue]
             if task.pid in id_list:
-                self.removeExecutable(task.pid, aborted=True)
+                self.removeExecutable(task.pid)
                 self.logger.warning(f"Reschedule of task {task.pid} met at {self.current_time}")
                 self.update_statistics(task, Statistic.missed_deadlines)
             self.execution_queue.append({ExecutableItems.pid.value: task.pid, 
                                          ExecutableItems.period.value: task.period, 
                                          ExecutableItems.deadline.value: task.deadline + self.current_time, 
-                                         ExecutableItems.startTime.value: self.current_time})
+                                         ExecutableItems.startTime.value: self.current_time,
+                                         ExecutableItems.delete.value: False})
             task.startedTime = self.current_time
             self.updateTask(task)
             self.logger.info(f"Task period met adding to execution queue {task.pid} at {self.current_time}")
