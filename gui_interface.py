@@ -97,7 +97,7 @@ class gui():
         elif scheduler_type == 'EDF':
             self.scheduler = EarliestDeadlineFirstScheduler(simulation_time, scheduler_type, self.cpu)
         elif scheduler_type == 'EDFA':
-            self.scheduler = EarliestDeadlineFirstScheduler(simulation_time, scheduler_type, self.cpu)    
+            self.scheduler = EarliestDeadlineFirstScheduler(simulation_time, scheduler_type, self.cpu, aperiodic=True)    
         
         self.setup_task_management_ui()
 
@@ -132,6 +132,7 @@ class gui():
     def clear_all_tasks(self):
         # This resets the entire application to the initial choice screen
         self.scheduler = None
+        self.cpu = CPU("Processor")
         self.task_ids.clear()
         self.setup_initial_choice()
 
@@ -150,7 +151,7 @@ class gui():
                 deadline = int(self.task_deadline_entry.get())
                 execution_time = int(self.task_execution_time_entry.get())
 
-                task = Task(task_id, period, deadline, execution_time)
+                task = Task(pid=task_id, period=period, deadline=deadline, execution_time=execution_time)
                 self.scheduler.add_task(task)
                 self.task_ids.add(task_id)  # Add the TaskID to the set of existing IDs
                 

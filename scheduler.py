@@ -67,11 +67,9 @@ class Scheduler:
             Statistic.executed_periods.value: 0,
             Statistic.non_executed_periods.value: self.simulation_time
         }
-        if task.aperiodic:
-            if self.randomGenerator:
-                task.updatedStartedTime(self.initialize_random_int())
-            else:
-                task.updatedStartedTime(task.period)
+        if self.aperiodic:
+            task.aperiodic = self.aperiodic
+            task.updatedStartedTime(self.initialize_random_int())
         self.tasks.append(task)
 
     def update_statistics(self, task, statistic):
@@ -131,9 +129,9 @@ class Scheduler:
         deadline_met = False
         if self.current_time - task.startedTime >= task.deadline and task.started:
             deadline_met = True
-            self.removeExecutable(task_pid, aborted=True)
+            self.removeExecutable(task_pid[ExecutableItems.pid.value], aborted=True)
             self.cpu.killProcess()
-            self.logger.warning(f"Deadline of task {task_pid} met at {self.current_time}")
+            self.logger.warning(f"Deadline of task {task_pid[ExecutableItems.pid.value]} met at {self.current_time}")
             self.update_statistics(task, Statistic.missed_deadlines)
         return deadline_met
     
@@ -148,6 +146,8 @@ class Scheduler:
                                          ExecutableItems.period.value: task.period, 
                                          ExecutableItems.deadline.value: task.deadline + self.current_time, 
                                          ExecutableItems.startTime.value: self.current_time})
+            task.startedTime = self.current_time
+            self.updateTask(task)
             self.logger.info(f"Task period met adding to execution queue {task.pid} at {self.current_time}")
             self.execution_queue.sort(key=lambda task: task[key.value])
 
@@ -155,21 +155,38 @@ class Scheduler:
     def send_task_to_cpu(self, task_pid):
         current_task = self.cpu.current_task
         new_task = self.getTask(task_pid)
+        finished = False
+        executed = False
         if not current_task and new_task:
-            current_task = new_task
-            self.logger.info(f"CPU empty executing {current_task.pid} ")
-        if self.preemp and new_task:
-            if current_task.pid != new_task.pid and current_task.priority > new_task.priority:
-                current_task = new_task
-                self.logger.warning(f"Swtiching tasks executing {current_task.pid} ")
-        self.update_statistics(current_task, Statistic.executed_periods)
-        return self.cpu.run_task(current_task, self.current_time)
+            self.logger.info(f"CPU empty executing {new_task.pid} at {self.current_time}")
+            self.update_statistics(new_task, Statistic.executed_periods)
+            new_task, finished = self.cpu.run_task(new_task, self.current_time)
+            executed = True
+        elif self.preemp and new_task and current_task.pid != new_task.pid and current_task.priority > new_task.priority:
+            self.logger.warning(f"Swtiching tasks executing {new_task.pid}  at {self.current_time}")
+            self.update_statistics(new_task, Statistic.executed_periods)
+            new_task, finished = self.cpu.run_task(new_task, self.current_time)
+            executed = True
+        elif new_task.pid == current_task.pid:
+            self.logger.info(f"Executing {new_task.pid} again at {self.current_time}")
+            self.update_statistics(new_task, Statistic.executed_periods)
+            new_task, finished = self.cpu.run_task(new_task, self.current_time)
+            executed = True
+        return new_task, finished, executed
 
     
     def updateTask(self, modified_task):
         for task in self.tasks:
             if task.pid == modified_task.pid:
                 task = modified_task
+    
+    def evaluateEmptyRun(self, index, executed, count_executables):
+        if len(self.execution_queue) == 0:
+            self.logger.info(f"Empty run due to empty queue at {self.current_time}")
+            return self.cpu.empty_run(self.current_time)
+        elif index != -1 and index == count_executables - 1 and not executed:
+            self.logger.info(f"Empty run due to last element at {self.current_time}")
+            return self.cpu.empty_run(self.current_time)
                         
 
 
