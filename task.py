@@ -35,7 +35,6 @@ class Task:
         finish = False
         if not self.started:
             self.started = True
-            self.startedTime = currentTime
         self.runningTime += 1
         self.pendingTime = self.execution_time - self.runningTime
         self.logger.info({"Task": self.pid,
