@@ -39,8 +39,6 @@ class gui():
         for widget in self.root.winfo_children():
             widget.destroy()
          # Immediately reinitialize CPU with default settings
-        self.cpu = CPU("Processor")
-        self.scheduler = None  # Or initialize a default scheduler if applicable
 
     def provide_cli_command(self):
         self.clear_widgets()
@@ -50,7 +48,7 @@ class gui():
         Button(self.root, text="Execute Command", command=self.execute_cli_command).pack(pady=10)
         Button(self.root, text="View Statistics", command=self.view_statistics).pack(pady=10)
         Button(self.root, text="View Timeline", command=self.load_and_plot_timeline).pack(pady=10)
-        Button(self.root, text="Clear Simulation", command=self.setup_initial_choice).pack(pady=10)
+        Button(self.root, text="Clear Simulation", command=self.clear_all_tasks).pack(pady=20)
         Button(self.root, text="Help", command=lambda: self.display_help(context="cli_command")).pack(pady=20)
 
     def view_statistics(self):
