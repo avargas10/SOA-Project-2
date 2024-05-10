@@ -17,10 +17,15 @@ class Task:
         self.logger = Logger(self.logPath) 
         self.logger.info(f"Task Created")
         self.reportCreation()
-        
+
     def reportCreation(self):
         self.logger.info(f"Task {self.pid} created")
         self.logger.info(f"\nPeriod {self.period}\nExecution Time {self.execution_time}\nDeadline {self.deadline}\nAperiodic {self.aperiodic}\nStarted Time {self.startedTime} ")
+
+    def updatedStartedTime(self, startedTime):
+        self.startedTime = startedTime
+        self.logger.info(f"New StartedTime {self.startedTime}")
+
     def resetTask(self):
         self.runningTime = 0
         self.startedTime = 0
