@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2024-05-09 19:08:37,558 - INFO - Task Created
 2024-05-09 19:08:37,558 - INFO - Task Task2 created
 2024-05-09 19:08:37,558 - INFO - 
@@ -34,3 +35,24 @@ Started Time 0
 2024-05-09 19:08:37,559 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 3, 'Pending Time': 7, 'Current Deadline': 61, 'Current Time': 47}
 2024-05-09 19:08:37,559 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 4, 'Pending Time': 6, 'Current Deadline': 61, 'Current Time': 48}
 2024-05-09 19:08:37,559 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 5, 'Pending Time': 5, 'Current Deadline': 61, 'Current Time': 49}
+=======
+2024-05-09 19:15:11,889 - INFO - Task Created
+2024-05-09 19:15:11,889 - INFO - Task Task2 created
+2024-05-09 19:15:11,889 - INFO - 
+Period 15
+Execution Time 10
+Deadline 16
+Aperiodic True
+Started Time 0 
+2024-05-09 19:15:11,889 - INFO - New StartedTime 16
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 1, 'Pending Time': 9, 'Current Deadline': 32, 'Current Time': 16}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 2, 'Pending Time': 8, 'Current Deadline': 32, 'Current Time': 17}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 3, 'Pending Time': 7, 'Current Deadline': 32, 'Current Time': 18}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 4, 'Pending Time': 6, 'Current Deadline': 32, 'Current Time': 19}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 5, 'Pending Time': 5, 'Current Deadline': 32, 'Current Time': 20}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 6, 'Pending Time': 4, 'Current Deadline': 32, 'Current Time': 21}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 7, 'Pending Time': 3, 'Current Deadline': 32, 'Current Time': 22}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 8, 'Pending Time': 2, 'Current Deadline': 32, 'Current Time': 23}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': False, 'Running Time': 9, 'Pending Time': 1, 'Current Deadline': 32, 'Current Time': 24}
+2024-05-09 19:15:11,889 - INFO - {'Task': 'Task2', 'Finished': True, 'Running Time': 10, 'Pending Time': 0, 'Current Deadline': 32, 'Current Time': 25}
+>>>>>>> feature/edfa

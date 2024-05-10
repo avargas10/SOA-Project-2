@@ -67,8 +67,7 @@ class Scheduler:
             Statistic.non_executed_periods.value: self.simulation_time
         }
         if task.aperiodic:
-            task.startedTime = self.initialize_random_int()
-            task.deadline = task.deadline
+            task.updatedStartedTime(self.initialize_random_int())
         self.tasks.append(task)
 
     def update_statistics(self, task, statistic):
