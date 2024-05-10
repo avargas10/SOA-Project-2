@@ -1,11 +1,15 @@
 from task import Task
 
-def read_tasks_from_file(filename):
+def read_tasks_from_file(filename, aperiodic=False):
     tasks = []
     with open(filename, 'r') as file:
         for line in file:
             pid, period, execution_time, deadline = line.split(',')
-            task = Task(pid, int(period), int(execution_time), int(deadline))
+            task = Task(pid=pid, 
+                        period=int(period), 
+                        execution_time=int(execution_time), 
+                        deadline=int(deadline), 
+                        aperiodic=aperiodic)
             tasks.append(task)
     return tasks
 
