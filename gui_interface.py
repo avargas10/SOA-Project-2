@@ -13,12 +13,14 @@ import random
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from constants import LOGS_PATH
 
 class gui():
     def __init__(self, root):
         self.root = root
         self.root.title("Task Scheduler GUI")
         self.cpu = CPU("Processor")
+        self.random_case = tk.IntVar()
         self.scheduler = None
         self.task_ids = set()
         self.setup_initial_choice()
@@ -49,7 +51,7 @@ class gui():
     def view_statistics(self):
         # Read log content
         try:
-            with open('logs/log-scheduler-RMS-statistics.log', 'r') as file:
+            with open(LOGS_PATH + self.scheduler.logPath + "-statistics.log", 'r') as file:
                 log_content = file.read()
             # Create a new window to display log content
             log_window = Toplevel(self.root)
@@ -82,6 +84,9 @@ class gui():
         self.simulation_time_entry = Entry(self.root)
         self.simulation_time_entry.pack()
 
+        tk.Checkbutton(self.root, text="Real Random Interruptions Case", variable=self.random_case).pack()
+
+
         Button(self.root, text="Submit", command=self.submit_manual_setup).pack(pady=20)
 
         
@@ -91,13 +96,13 @@ class gui():
     def submit_manual_setup(self):
         scheduler_type = self.scheduler_type_entry.get()
         simulation_time = int(self.simulation_time_entry.get())
-
+        random_case = int(self.random_case.get()) > 0
         if scheduler_type == 'RMS':
             self.scheduler = RateMonotonicScheduler(simulation_time, scheduler_type, self.cpu)
         elif scheduler_type == 'EDF':
             self.scheduler = EarliestDeadlineFirstScheduler(simulation_time, scheduler_type, self.cpu)
         elif scheduler_type == 'EDFA':
-            self.scheduler = EarliestDeadlineFirstScheduler(simulation_time, scheduler_type, self.cpu, aperiodic=True)    
+            self.scheduler = EarliestDeadlineFirstScheduler(simulation_time, scheduler_type, self.cpu, aperiodic=True, randomGenerator=random_case)    
         
         self.setup_task_management_ui()
 

@@ -36,8 +36,6 @@ class EarliestDeadlineFirstScheduler(Scheduler):
             count_executables = len(self.execution_queue)
             self.evaluateEmptyRun(-1, executed, count_executables)
             for index, task_pid in enumerate(self.execution_queue):
-                # self.logger.info(f"self.execution_queue {self.execution_queue}")
-                # self.logger.info(f"Analyzing {task_pid} at {self.current_time}")
                 if not self.is_deadline_met(task_pid) and not executed:
                     task, task_finished, executed = self.send_task_to_cpu(task_pid)
                     if task_finished:
@@ -60,8 +58,6 @@ class EarliestDeadlineFirstScheduler(Scheduler):
             count_executables = len(self.execution_queue)
             self.evaluateEmptyRun(-1, executed, count_executables)
             for index, task_pid in enumerate(self.execution_queue):
-                # self.logger.info(f"self.execution_queue {self.execution_queue}")
-                # self.logger.info(f"Analyzing {task_pid} at {self.current_time}")
                 if not self.is_deadline_met(task_pid) and not executed:
                     task, task_finished, executed = self.send_task_to_cpu(task_pid)
                     if task_finished:

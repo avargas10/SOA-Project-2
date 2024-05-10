@@ -69,7 +69,9 @@ class Scheduler:
         }
         if self.aperiodic:
             task.aperiodic = self.aperiodic
-            task.updatedStartedTime(self.initialize_random_int())
+            task.updatedStartedTime(task.period)
+            if self.randomGenerator:
+                task.updatedStartedTime(self.initialize_random_int())
         self.tasks.append(task)
 
     def update_statistics(self, task, statistic):
