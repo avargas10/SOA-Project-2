@@ -1,10 +1,8 @@
-2024-05-09 19:08:37,558 - INFO - Task Created
-2024-05-09 19:08:37,558 - INFO - Task Task3 created
-2024-05-09 19:08:37,558 - INFO - 
+2024-05-09 19:11:06,970 - INFO - Task Created
+2024-05-09 19:11:06,970 - INFO - Task Task3 created
+2024-05-09 19:11:06,970 - INFO - 
 Period 20
 Execution Time 2
 Deadline 19
-Aperiodic False
+Aperiodic True
 Started Time 0 
-2024-05-09 19:08:37,559 - INFO - {'Task': 'Task3', 'Finished': False, 'Running Time': 1, 'Pending Time': 1, 'Current Deadline': 48, 'Current Time': 29}
-2024-05-09 19:08:37,559 - INFO - {'Task': 'Task3', 'Finished': True, 'Running Time': 2, 'Pending Time': 0, 'Current Deadline': 48, 'Current Time': 34}

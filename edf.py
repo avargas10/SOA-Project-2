@@ -19,7 +19,7 @@ class EarliestDeadlineFirstScheduler(Scheduler):
     
     def isExecuting(self, task):
         isExec = False
-        if not task.finished:
+        if task.started:
             for executable in self.execution_queue:
                 executable[ExecutableItems.pid.value] == task.pid
                 isExec = True
