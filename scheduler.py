@@ -3,12 +3,14 @@ import time
 from cpu import CPU
 from logger import Logger
 from enum import Enum
+import random
 from constants import SCHEDULER_LOGGER, GENERAL_STATISTICS
 
 class ExecutableItems(Enum):
     pid = "pid"
     period = "period"
     deadline = "deadline"
+    startTime = "startTime"
 
 
 class Statistic(Enum):
@@ -20,7 +22,7 @@ class Statistic(Enum):
     non_executed_periods_percentage = "non_executed_periods_percentage"
 
 class Scheduler:
-    def __init__(self, simulation_time, name, cpu):
+    def __init__(self, simulation_time, name, cpu, aperiodic=False):
         self.simulation_time = simulation_time
         self.tasks = []
         self.name = name
@@ -28,6 +30,7 @@ class Scheduler:
         self.cpu = cpu
         self.statistics = {}
         self.preemp = True
+        self.aperiodic = aperiodic
         self.execution_queue = []
         self.logPath = SCHEDULER_LOGGER + "-" + name
         self.logger = Logger(self.logPath) 
@@ -38,14 +41,35 @@ class Scheduler:
             Statistic.non_executed_periods.value: self.simulation_time
         }
         
+    def initialize_random_int(self):
+        """
+        Generate a random integer between 0 and the specified limit.
+        
+        Parameters:
+        - limit (int): The upper bound for the random integer. Must be greater than or equal to 0.
+        
+        Returns:
+        - int: A random integer between 0 and `limit`.
+        """
+        if self.simulation_time < 0:
+            raise ValueError("Limit must be non-negative.")
+        
+        # Generate a random integer between 0 and limit
+        random_int = random.randint(0, self.simulation_time)
+        
+        return random_int
 
     def add_task(self, task):
-        self.tasks.append(task)
+        
         self.statistics[task.pid] = {
             Statistic.missed_deadlines.value: 0,
             Statistic.executed_periods.value: 0,
             Statistic.non_executed_periods.value: self.simulation_time
         }
+        if task.aperiodic:
+            task.startedTime = self.initialize_random_int()
+            task.deadline = task.deadline
+        self.tasks.append(task)
 
     def update_statistics(self, task, statistic):
         self.statistics[task.pid][statistic.value] += 1
@@ -119,7 +143,8 @@ class Scheduler:
                 self.update_statistics(task, Statistic.missed_deadlines)
             self.execution_queue.append({ExecutableItems.pid.value: task.pid, 
                                          ExecutableItems.period.value: task.period, 
-                                         ExecutableItems.deadline.value: task.deadline + self.current_time})
+                                         ExecutableItems.deadline.value: task.deadline + self.current_time, 
+                                         ExecutableItems.startTime.value: self.current_time})
             self.logger.info(f"Task period met adding to execution queue {task.pid} at {self.current_time}")
             self.execution_queue.sort(key=lambda task: task[key.value])
 

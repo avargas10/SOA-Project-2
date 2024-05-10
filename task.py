@@ -2,7 +2,7 @@ from logger import Logger
 from constants import TASK_LOGGER
 
 class Task:
-    def __init__(self, pid, period, execution_time, deadline):
+    def __init__(self, pid, period, execution_time, deadline, aperiodic=False):
         self.pid = pid
         self.period = period
         self.execution_time = execution_time
@@ -11,10 +11,16 @@ class Task:
         self.runningTime = 0
         self.started = False
         self.startedTime = 0
+        self.aperiodic = aperiodic
         self.priority = 0
         self.logPath = TASK_LOGGER + "-" + pid
         self.logger = Logger(self.logPath) 
-
+        self.logger.info(f"Task Created")
+        self.reportCreation()
+        
+    def reportCreation(self):
+        self.logger.info(f"Task {self.pid} created")
+        self.logger.info(f"\nPeriod {self.period}\nExecution Time {self.execution_time}\nDeadline {self.deadline}\nAperiodic {self.aperiodic}\nStarted Time {self.startedTime} ")
     def resetTask(self):
         self.runningTime = 0
         self.startedTime = 0
