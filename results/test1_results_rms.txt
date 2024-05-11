@@ -1,3 +1,3 @@
-Task1: {'Missed Deadlines': 0, 'Executed Periods': 35, 'Non executed Periods': 15, 'Executed Periods Percentage': 70.0, 'Non executed Periods Percentage': 30.0}
-Task2: {'Missed Deadlines': 2, 'Executed Periods': 10, 'Non executed Periods': 40, 'Executed Periods Percentage': 20.0, 'Non executed Periods Percentage': 80.0}
-Task3: {'Missed Deadlines': 2, 'Executed Periods': 5, 'Non executed Periods': 45, 'Executed Periods Percentage': 10.0, 'Non executed Periods Percentage': 90.0}
+Task1: {'Missed Deadlines': 0, 'Executed Periods': 7, 'Non executed Periods': 43, 'Executed Periods Percentage': 14.0, 'Non executed Periods Percentage': 86.0}
+Task2: {'Missed Deadlines': 0, 'Executed Periods': 4, 'Non executed Periods': 46, 'Executed Periods Percentage': 8.0, 'Non executed Periods Percentage': 92.0}
+Task3: {'Missed Deadlines': 0, 'Executed Periods': 8, 'Non executed Periods': 42, 'Executed Periods Percentage': 16.0, 'Non executed Periods Percentage': 84.0}

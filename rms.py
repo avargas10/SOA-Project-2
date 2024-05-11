@@ -1,13 +1,20 @@
 from scheduler import Scheduler, ExecutableItems
 
-
 class RateMonotonicScheduler(Scheduler):
     def calculate_utilization(self):
+        """
+        Calculates the CPU utilization.
+
+        Returns:
+        - utilization (float): The CPU utilization.
+        """
         utilization = sum(task.execution_time / task.period for task in self.tasks)
         return utilization
-    
 
     def run(self):
+        """
+        Runs the Rate Monotonic Scheduler.
+        """
         self.tasks.sort(key=lambda task: task.period)  # RMS: Ordena por periodo (menor a mayor)
         self.assign_priorities()
 
@@ -31,5 +38,3 @@ class RateMonotonicScheduler(Scheduler):
                     self.evaluateEmptyRun(index, executed, count_executables)
         self.cpu.print_history()
         self.save_statistics()
-        
-            

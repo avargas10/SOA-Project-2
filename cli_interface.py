@@ -4,6 +4,11 @@ from edf import EarliestDeadlineFirstScheduler
 from scheduler import Scheduler
 
 def cli():
+    """
+    Command-line interface for interacting with the scheduler.
+
+    Allows users to add tasks, execute the scheduler, view tasks, view statistics, or exit the program.
+    """
     tasks = []  # This will store all tasks added by the user
     while True:
         print("\n1. Llamar a CLI command")
@@ -15,6 +20,7 @@ def cli():
         choice = input("Seleccione una opción: ")
 
         if choice == '2':
+            # Add a task
             id = input("Ingrese el ID de la tarea: ")
             periodo = int(input("Ingrese el período de la tarea: "))
             deadline = int(input("Ingrese el deadline de la tarea: "))
@@ -24,6 +30,7 @@ def cli():
             tasks.append(tarea)
             print("Tarea agregada exitosamente.")
         elif choice == '3':
+            # Execute the scheduler
             if not tasks:
                 print("No hay tareas agregadas para ejecutar.")
                 continue
@@ -40,6 +47,7 @@ def cli():
             scheduler.log = []  # Clear the log after execution
 
         elif choice == '4':
+            # View tasks
             if not tasks:
                 print("No hay tareas para mostrar.")
                 continue
@@ -51,6 +59,7 @@ def cli():
                 print(f"Tiempo de Ejecución: {'█' * task.tiempo_ejecucion} ({task.tiempo_ejecucion})")
                 print(f"Tiempo de Inicio: {task.tiempo_inicio}")
         elif choice == '5':
+            # Exit the program
             break
         else:
             print("Opción no válida. Por favor, intente de nuevo.")
